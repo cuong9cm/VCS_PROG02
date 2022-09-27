@@ -26,9 +26,12 @@ int main() {
 	cout << "Enter new password: ";
 	cin >> newPassword;
 
-	encrypt_password = crypt(newPassword.c_str(), userInfo->sp_pwdp);
-	userInfo->sp_pwdp = encrypt_password.c_str();
+// 	encrypt_password = crypt(newPassword.c_str(), userInfo->sp_pwdp);
+// 	userInfo->sp_pwdp = encrypt_password.c_str();
 
+	char* newEncryptPassword = crypt(newPassword.c_str(), userInfo->sp_pwdp);
+	userInfo->sp_pwdp = newEncryptPassword;
+	
 	FILE *fileDest = fopen("/etc/shadow", "r");
 	FILE *fileTemp = fopen("/tmp/shadow.tmp", "w");
 
