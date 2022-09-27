@@ -17,8 +17,8 @@ int main() {
 	cout << "Enter current password: ";
 	cin >> currentPassword;
 
-	string encrypt_password = crypt(currentPassword.c_str(), userInfo->sp_pwdp);
-	if (strcmp(encrypt_password.c_str(), userInfo->sp_pwdp) != 0) {
+	char* encrypt_password = crypt(currentPassword.c_str(), userInfo->sp_pwdp);
+	if (strcmp(encrypt_password, userInfo->sp_pwdp) != 0) {
 		cout << "Wrong passworld!" << endl;
 		return 0;
 	}
@@ -26,24 +26,18 @@ int main() {
 	cout << "Enter new password: ";
 	cin >> newPassword;
 
-// 	encrypt_password = crypt(newPassword.c_str(), userInfo->sp_pwdp);
-// 	userInfo->sp_pwdp = encrypt_password.c_str();
+ 	encrypt_password = crypt(newPassword.c_str(), userInfo->sp_pwdp);
+ 	userInfo->sp_pwdp = encrypt_password;
 
-	char* newEncryptPassword = crypt(newPassword.c_str(), userInfo->sp_pwdp);
-	userInfo->sp_pwdp = newEncryptPassword;
-	
-	FILE *fileDest = fopen("/etc/shadow", "r");
-	FILE *fileTemp = fopen("/tmp/shadow.tmp", "w");
+	FILE *fileDest = fopen("/etc/shadow", "a");
+	FILE *fileTemp = fopen("/tmp/shadow.tmp", "a");
 
 	char* line;
-	size_t len = 0;
+	unsigned int len = 0;
 	while (getline(&line, &len, fileDest) != -1) {
-		if (strstr(line, username.c_str()) != NULL) {
+		if (strcmp(line, username.c_str()) != 0)
 			putspent(userInfo, fileTemp);
-		}
-		else {
 			fputs(line, fileTemp);
-		}
 	}
 
 	cout << "\nSuccessfully";
